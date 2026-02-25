@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.safari.options import Options as SafariOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
-
+from local_scraper import run_scraper
 # 1. Pull credentials securely from PowerShell environment variables
 BROWSERSTACK_USERNAME = os.environ.get("BROWSERSTACK_USERNAME")
 BROWSERSTACK_ACCESS_KEY = os.environ.get("BROWSERSTACK_ACCESS_KEY")
@@ -45,18 +45,20 @@ def run_session(env):
     
     driver = webdriver.Remote(command_executor=URL, options=options)
     
-    try:
-        # Test the connection to El País
-        driver.get("https://elpais.com/opinion/")
-        print(f"[{session_name}] Successfully loaded: {driver.title}")
+  try:
+        # Execute the actual scraping logic on the cloud browsers
+        scraped_data = run_scraper(driver)
         
-        # Mark test as passed on BrowserStack
-        driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed", "reason": "Page loaded successfully"}}')
-        
+        if scraped_data:
+            print(f"[{session_name}] Successfully scraped {len(scraped_data)} articles.")
+            driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"passed", "reason": "Scraping completed successfully"}}')
+        else:
+            driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "No data scraped"}}')
+            
     except Exception as e:
         print(f"[{session_name}] Error: {e}")
         driver.execute_script('browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed", "reason": "Exception occurred"}}')
-    finally:
+        finally:
         driver.quit()
 
 if __name__ == "__main__":
