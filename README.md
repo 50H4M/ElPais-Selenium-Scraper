@@ -16,5 +16,5 @@ This project is a technical demonstration of web scraping, API integration, text
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/YOUR_GITHUB_USERNAME/ElPais-Selenium-Scraper.git](https://github.com/YOUR_GITHUB_USERNAME/ElPais-Selenium-Scraper.git)
+  git clone https://github.com/50H4M/ElPais-Selenium-Scraper.git
    cd ElPais-Selenium-Scraper
