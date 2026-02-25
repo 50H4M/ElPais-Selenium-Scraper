@@ -1,0 +1,5 @@
+venv/
+__pycache__/
+article_images/
+.env
+.DS_Store
